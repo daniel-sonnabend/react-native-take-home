@@ -1,5 +1,6 @@
 import React from 'react';
 import type {PropsWithChildren} from 'react';
+
 import {
   SafeAreaView,
   ScrollView,
@@ -9,11 +10,12 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
+
 import {
   QueryClient,
   QueryClientProvider,
   useQuery,
-} from '@tanstack/react-query'
+} from '@tanstack/react-query';
 
 import {
   Colors,
@@ -23,8 +25,9 @@ type SectionProps = PropsWithChildren<{
   title: string;
 }>;
 
-function Section({children, title}: SectionProps): JSX.Element {
+function Section({ children, title }: SectionProps): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
+
   return (
     <View style={styles.sectionContainer}>
       <Text
@@ -36,6 +39,7 @@ function Section({children, title}: SectionProps): JSX.Element {
         ]}>
         {title}
       </Text>
+
       <Text
         style={[
           styles.sectionDescription,
@@ -66,17 +70,18 @@ type ToDo = {
   id: number;
   userId: number;
   title: String;
-  completed: Boolean
+  completed: Boolean;
 }
 
 const ToDos = () => {
   const { isLoading, error, data } = useQuery({
     queryKey: ['todos'],
+
     queryFn: (): Promise<ToDo[]> =>
       fetch('https://jsonplaceholder.typicode.com/todos').then(
         (res) => res.json(),
       ),
-  })
+  });
 
   if (isLoading) return <Text>Loading...</Text>
 
