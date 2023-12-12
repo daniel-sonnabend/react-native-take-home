@@ -24,7 +24,7 @@ In this task, you will be provided with a design for the `ToDoCard` component in
 
 Your objective is to implement a "Completed" filter that allows users to view either completed or incomplete tasks based on their selection. Your task involves designing the filter UI, implementing the filter functionality, updating the user interface based on the filter selection.
 
-## 6. Refactor, improve, enhance
+## 5. Refactor, improve, enhance
 
 Feel free to unleash your creativity and enhance the codebase as much as you like. This could include breaking up code into smaller units, extracting code into different files, and utilizing a code formatter to maintain consistency. If your existing code is already exceptional; however, there's a bonus task awaiting you below.
 
