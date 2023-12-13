@@ -117,7 +117,7 @@ const ToDos = () => {
 
   if (!todosData) return <Text>Data was undefined :(</Text>
 
-  mapUserNamesToToDos(todosData, usersData);
+  if (usersData != null) mapUserNamesToToDos(todosData, usersData);
 
   return (
     <View style={{flexDirection: "column",  flex: 1, gap: 10 }}>
