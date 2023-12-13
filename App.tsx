@@ -61,20 +61,48 @@ const ToDoView = ({ todo }: ToDoViewProps) => {
   return (
     <View style={{padding: 5, borderRadius: 5, backgroundColor: "white", shadowOpacity: 0.3, shadowColor: "black", shadowRadius: 10, width: "100%"}}>
       <Text>{todo.title}</Text>
-      <Text style={{fontStyle: "italic"}}>by User {todo.userId}</Text>
+      <UserNameLabel name={todo.userName} />
     </View>
   );
 }
 
+const UserNameLabel = ({ name }: String) => {
+  // I decided to still show the rest of the todo and simply note that the user name is missing
+  // instead of not showing the todo.
+  if (name == null) return <Text style={{fontStyle: "italic"}}>user name missing</Text>
+
+  return <Text style={{fontStyle: "italic"}}>by User {name}</Text>
+}
+
+/**
+{@link ToDo.userName} can be null
+*/
 type ToDo = {
   id: number;
   userId: number;
+  userName: String;
   title: String;
   completed: Boolean;
 }
 
+// Only those fields are needed for the tasks, the others can be ignored.
+// If this type could be used in the future, I would add all the fields.
+type Users = {
+  id: number;
+  name: String;
+}
+
 const ToDos = () => {
-  const { isLoading, error, data } = useQuery({
+  const { isLoading: usersAreLoading, error: usersError, data: usersData } = useQuery({
+    queryKey: ['users'],
+
+    queryFn: (): Promise<User[]> =>
+      fetch('https://jsonplaceholder.typicode.com/users').then(
+        (res) => res.json(),
+      ),
+  });
+
+  const { isLoading: todosAreLoading, error: todosError, data: todosData } = useQuery({
     queryKey: ['todos'],
 
     queryFn: (): Promise<ToDo[]> =>
@@ -83,17 +111,40 @@ const ToDos = () => {
       ),
   });
 
-  if (isLoading) return <Text>Loading...</Text>
+  if (todosAreLoading || usersAreLoading) return <Text>Loading...</Text>
 
-  if (error) return <Text>An error has occurred ${error.message}</Text>
+  if (todosError) return <Text>An error has occurred ${todosError.message}</Text>
 
-  if (!data) return <Text>Data was undefined :(</Text>
+  if (!todosData) return <Text>Data was undefined :(</Text>
+
+  mapUserNamesToToDos(todosData, usersData);
 
   return (
     <View style={{flexDirection: "column",  flex: 1, gap: 10 }}>
-      {data.map((todo: ToDo) => (<ToDoView todo={todo} />))}
+      {todosData.map((todo: ToDo) => (<ToDoView todo={todo} />))}
     </View>
   );
+}
+
+/**
+This function will set the matching user names in the given {@link ToDo} object.
+*/
+function mapUserNamesToToDos(todos: ToDo[], users: User[]): void {
+  // I will simply loop over the users for every todo.
+  // This would cause performance issues if the users list gets too long.
+  // But for this task it suffices.
+
+  for (var todo of todos) {
+    const userId = todo.userId;
+
+    if (userId != null) {
+      for (var user of users) {
+        if (userId == user.id) {
+          todo.userName = user.name;
+        }
+      }
+    }
+  }
 }
 
 const queryClient = new QueryClient()
