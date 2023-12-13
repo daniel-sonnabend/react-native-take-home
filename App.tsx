@@ -2,6 +2,8 @@ import React from 'react';
 import type {PropsWithChildren} from 'react';
 
 import {
+  Dimensions,
+  Image,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -59,9 +61,12 @@ type ToDoViewProps = {
 
 const ToDoView = ({ todo }: ToDoViewProps) => {
   return (
-    <View style={{padding: 5, borderRadius: 5, backgroundColor: "white", shadowOpacity: 0.3, shadowColor: "black", shadowRadius: 10, width: "100%"}}>
+    <View elevation={5} style={styles.card}>
       <Text>{todo.title}</Text>
-      <UserNameLabel name={todo.userName} />
+      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+        <UserNameLabel name={todo.userName}/>
+        <CompleteIndicator completed={todo.completed}/>
+      </View>
     </View>
   );
 }
@@ -71,7 +76,26 @@ const UserNameLabel = ({ name }: String) => {
   // instead of not showing the todo.
   if (name == null) return <Text style={{fontStyle: "italic"}}>user name missing</Text>
 
-  return <Text style={{fontStyle: "italic"}}>by User {name}</Text>
+  return (
+    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+      <Image source={require('./assets/user_icon.png')}/>
+      <Text style={{fontStyle: "italic"}}> {name} </Text>
+    </View>
+  );
+}
+
+const CompleteIndicator = ({ completed }: Boolean) => {
+  const icon = completed ? require('./assets/complete_icon.png')
+      : require('./assets/uncomplete_icon.png');
+
+  const text = completed ? 'Complete' : 'Uncomplete';
+
+  return (
+    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+      <Image source={icon}/>
+      <Text style={{fontStyle: "italic"}}> {text} </Text>
+    </View>
+  );
 }
 
 /**
@@ -120,7 +144,7 @@ const ToDos = () => {
   if (usersData != null) mapUserNamesToToDos(todosData, usersData);
 
   return (
-    <View style={{flexDirection: "column",  flex: 1, gap: 10 }}>
+    <View style={{flexDirection: "column", gap: 10}}>
       {todosData.map((todo: ToDo) => (<ToDoView todo={todo} />))}
     </View>
   );
@@ -196,6 +220,15 @@ const styles = StyleSheet.create({
   },
   highlight: {
     fontWeight: '700',
+  },
+  card: {
+    padding: 5,
+    borderRadius: 5,
+    backgroundColor: "white",
+    shadowOpacity: 0.3,
+    shadowColor: "black",
+    shadowRadius: 10,
+    maxWidth: 0.9 * Dimensions.get('window').width,
   },
 });
 
