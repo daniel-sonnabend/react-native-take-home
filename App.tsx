@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import type {PropsWithChildren} from 'react';
 
 import {
@@ -116,7 +116,15 @@ type Users = {
   name: String;
 }
 
+enum FilterMode {
+  All,
+  Completed,
+  Uncompleted
+}
+
 const ToDos = () => {
+  const [filterMode, setFilterMode] = useState(FilterMode.All);
+
   const { isLoading: usersAreLoading, error: usersError, data: usersData } = useQuery({
     queryKey: ['users'],
 
@@ -141,6 +149,8 @@ const ToDos = () => {
 
   if (!todosData) return <Text>Data was undefined :(</Text>
 
+  const filteredToDos = filterToDos(todosData, filterMode);
+
   if (usersData != null) mapUserNamesToToDos(todosData, usersData);
 
   return (
@@ -148,6 +158,14 @@ const ToDos = () => {
       {todosData.map((todo: ToDo) => (<ToDoView todo={todo} />))}
     </View>
   );
+}
+
+function filterToDos(todos: ToDo[], filterMode: FilterMode): ToDo[] {
+  if (filterMode === FilterMode.All) return todos;
+
+  if (filterMode === FilterMode.Completed) return todos.filter((todo) => todo.completed);
+
+  if (filterMode === FilterMode.Uncompleted) return todos.filter((todo) => !todo.completed);
 }
 
 /**
