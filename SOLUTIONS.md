@@ -26,7 +26,7 @@ Keep in mind that I did not work with React Native before, so I will research ho
 - I wasn't sure if I could simply make two queries at the same time, so I took a look at the documentation of react-query.
 - Then I implemented my solution and tested it.
 
-# 3.
+# 3. Redesign the ToDo Card
 
 - I exported the icons from the Figma board.
 - I was not sure how to add the background of the card, so I did some research.
@@ -38,7 +38,7 @@ Keep in mind that I did not work with React Native before, so I will research ho
 - After that I added the user icon.
 - Then I added the information whether the ToDo has been completed.
 
-# 4.
+# 4. Filters
 
 - My thought process here was that I need some state management and selection element to alter the state.
 - So first of all I researched how to implement the state management.
@@ -52,7 +52,7 @@ Keep in mind that I did not work with React Native before, so I will research ho
 - Therefore, I will not do that. Maybe enums were not the right choice in the first place.
 - Then I implemented my solution and tested it.
 
-# 5.
+# 5. Refactor, improve, enhance
 
 - I removed some code style inconsistencies that were already in the original repository during my first look at the code.
 - I think the most important aspect of this task is what I would do.
