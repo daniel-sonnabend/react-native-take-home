@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import type {PropsWithChildren} from 'react';
 
 import {
+  Button,
   Dimensions,
   Image,
   SafeAreaView,
@@ -57,6 +58,25 @@ function Section({ children, title }: SectionProps): JSX.Element {
 
 type ToDoViewProps = {
   todo: ToDo
+}
+
+type FilterButtonProps = {
+  mode: FilterMode,
+  setMode: React.Dispatch<React.SetStateAction<FilterMode>>
+}
+
+const FilterButton = ({ mode, setMode }: FilterButtonProps) => {
+  return <Button title={mode} onPress={() => setMode(mode)}/>
+}
+
+const FilterSelection = ({ setMode }: React.Dispatch<React.SetStateAction<FilterMode>>) => {
+  return (
+    <View style={{flexDirection: 'row', gap: 10}}>
+      <FilterButton mode={FilterMode.All} setMode={setMode}/>
+      <FilterButton mode={FilterMode.Completed} setMode={setMode}/>
+      <FilterButton mode={FilterMode.Uncompleted} setMode={setMode}/>
+    </View>
+  );
 }
 
 const ToDoView = ({ todo }: ToDoViewProps) => {
@@ -117,9 +137,9 @@ type Users = {
 }
 
 enum FilterMode {
-  All,
-  Completed,
-  Uncompleted
+  All = "all",
+  Completed = "completed",
+  Uncompleted = "uncompleted"
 }
 
 const ToDos = () => {
@@ -155,17 +175,21 @@ const ToDos = () => {
 
   return (
     <View style={{flexDirection: "column", gap: 10}}>
-      {todosData.map((todo: ToDo) => (<ToDoView todo={todo} />))}
+      <FilterSelection setMode={setFilterMode} />
+      {filteredToDos.map((todo: ToDo) => (<ToDoView todo={todo} />))}
     </View>
   );
 }
 
 function filterToDos(todos: ToDo[], filterMode: FilterMode): ToDo[] {
-  if (filterMode === FilterMode.All) return todos;
+  // default case is to show all todos
+  let result = todos;
 
-  if (filterMode === FilterMode.Completed) return todos.filter((todo) => todo.completed);
+  if (filterMode === FilterMode.Completed) result = todos.filter((todo) => todo.completed);
 
-  if (filterMode === FilterMode.Uncompleted) return todos.filter((todo) => !todo.completed);
+  if (filterMode === FilterMode.Uncompleted) result = todos.filter((todo) => !todo.completed);
+
+  return result;
 }
 
 /**
